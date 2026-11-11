@@ -3,3 +3,4 @@
 0.1.0-postgresql
 0.1.0-postgresql-native
 0.1.0-oracle
+0.1.0-oracle-native
