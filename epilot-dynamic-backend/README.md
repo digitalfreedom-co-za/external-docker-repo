@@ -6,7 +6,7 @@ Diese Liste wird bei jeder Veröffentlichung automatisch erzeugt.
 
 | Version | Exakte Tags |
 | --- | --- |
-| 0.1.0 | `0.1.0-postgresql` |
+| 0.1.0 | `0.1.0-postgresql`, `0.1.0-postgresql-native` |
 | 0.0.1 | `0.0.1-oracle`, `0.0.1-postgresql` |
 
 Mitlaufende Tags zeigen auf den zuletzt veröffentlichten exakten Tag mit derselben Versionslinie und demselben Suffix.
@@ -16,7 +16,9 @@ Verwenden Sie im Produktivbetrieb immer einen exakten Tag.
 | --- | --- |
 | `latest-oracle` | `0.0.1-oracle` |
 | `latest-postgresql` | `0.1.0-postgresql` |
+| `latest-postgresql-native` | `0.1.0-postgresql-native` |
 | `0.1-postgresql` | `0.1.0-postgresql` |
+| `0.1-postgresql-native` | `0.1.0-postgresql-native` |
 | `0.0-oracle` | `0.0.1-oracle` |
 | `0.0-postgresql` | `0.0.1-postgresql` |
 
