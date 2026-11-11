@@ -1,2 +1,3 @@
 0.0.1-postgresql
 0.0.1-oracle
+0.1.0-postgresql
