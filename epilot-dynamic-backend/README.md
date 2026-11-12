@@ -1,5 +1,7 @@
 # epilot Dynamic Backend betreiben
 
+Die Apps können jede API abfragen, die Daten in der Struktur der Dynamic Apps liefert. Alternativ nutzen Sie das kostenlos enthaltene Backend `epilot-dynamic-backend` und müssen dann für die Bereitstellung der Daten nur die Tabellen befüllen. Beide Möglichkeiten sind gleichwertig. Diese Anleitung beschreibt das Selbsthosting des optionalen, kostenlos enthaltenen Backends. Der View-Modus ist eine fortgeschrittene Option.
+
 ## Verfügbare Tags
 
 Diese Liste wird bei jeder Veröffentlichung automatisch erzeugt.
