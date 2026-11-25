@@ -8,7 +8,7 @@ Diese Liste wird bei jeder Veröffentlichung automatisch erzeugt.
 
 | Version | Exakte Tags |
 | --- | --- |
-| 0.2.0 | `0.2.0-postgresql` |
+| 0.2.0 | `0.2.0-postgresql`, `0.2.0-postgresql-native` |
 | 0.1.0 | `0.1.0-oracle`, `0.1.0-oracle-native`, `0.1.0-postgresql`, `0.1.0-postgresql-native` |
 | 0.0.1 | `0.0.1-oracle`, `0.0.1-postgresql` |
 
@@ -20,8 +20,9 @@ Verwenden Sie im Produktivbetrieb immer einen exakten Tag.
 | `latest-oracle` | `0.1.0-oracle` |
 | `latest-oracle-native` | `0.1.0-oracle-native` |
 | `latest-postgresql` | `0.2.0-postgresql` |
-| `latest-postgresql-native` | `0.1.0-postgresql-native` |
+| `latest-postgresql-native` | `0.2.0-postgresql-native` |
 | `0.2-postgresql` | `0.2.0-postgresql` |
+| `0.2-postgresql-native` | `0.2.0-postgresql-native` |
 | `0.1-oracle` | `0.1.0-oracle` |
 | `0.1-oracle-native` | `0.1.0-oracle-native` |
 | `0.1-postgresql` | `0.1.0-postgresql` |
