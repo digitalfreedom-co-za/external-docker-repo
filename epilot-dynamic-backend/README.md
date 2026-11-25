@@ -132,7 +132,7 @@ Für Oracle verwenden Sie wieder das Image mit `0.0.1-oracle`. Richten Sie den H
 
 Nach Änderungen an `endpoints.yaml` starten Sie den Container neu. Bei atomarem Austausch der Datei erstellen Sie den Container neu, damit der Dateimount die neue Datei verwendet. Im Tabellenmodus werden entfernte Endpunkte inaktiv und liefern HTTP 404; gespeicherte Einträge bleiben erhalten. Alle Replikate benötigen dieselbe Konfiguration. Im Tabellenmodus unter Oracle starten Sie bei neuen Endpunkten zuerst ein Replikat und skalieren erst nach erfolgreicher Synchronisation.
 
-Alternativ können Sie die Liste über Standardvariablen wie `APP_ENDPOINTS_0__PATH=tarife` und `APP_ENDPOINTS_0__TYPE=dropdown` konfigurieren. Beginnen Sie mit Index 0 und verwenden Sie fortlaufende Indizes. Verwenden Sie eine vollständige Quelle für die Liste, da Quarkus Einträge aus mehreren Quellen nach Index zusammenführt.
+Alternativ können Sie die Liste über Standardvariablen wie `APP_ENDPOINTS_0__PATH=tarife` und `APP_ENDPOINTS_0__TYPE=dropdown` konfigurieren. Eine Kaskade erhält zusätzlich die Ebenenanzahl, etwa `APP_ENDPOINTS_1__PATH=netz-produkt-tarif`, `APP_ENDPOINTS_1__TYPE=cascade` und `APP_ENDPOINTS_1__LEVELS=3`. Beginnen Sie mit Index 0 und verwenden Sie fortlaufende Indizes. Verwenden Sie eine vollständige Quelle für die Liste, da Quarkus Einträge aus mehreren Quellen nach Index zusammenführt.
 
 ## 5. Mit Docker Compose und eigener Datenbank starten
 
@@ -403,7 +403,17 @@ Ausnahme in den Quelldaten: Zwei Netzgebiete haben denselben Code `10001568`. Da
 
 ## 8. Optionalen Zugriffsschutz aktivieren
 
-Ergänzen Sie in `backend.env` beziehungsweise bei Compose in `.env` die Variable `APP_AUTH_BEARER_TOKEN` mit einem geheimen Token und erstellen Sie den Container mit derselben Startanweisung neu. Ohne Token oder bei leerem Wert ist die API öffentlich. Bei gesetztem Token verlangen API-Aufrufe den Header `Authorization: Bearer <Token>`. Der Dienst protokolliert den Token nicht. Die Health Endpunkte bleiben ohne Authentifizierung erreichbar. Swagger UI (`/q/swagger-ui`) und das OpenAPI Dokument (`/q/openapi`) sind nur für Entwicklung und Test gedacht und nur mit `APP_OPENAPI_ENABLED=true` erreichbar, dann ohne Token. Setzen Sie diese Variable im Produktivbetrieb nicht.
+Ergänzen Sie in `backend.env` beziehungsweise bei Compose in `.env` die Variable `APP_AUTH_BEARER_TOKEN` mit einem geheimen Token und erstellen Sie den Container mit derselben Startanweisung neu. Ohne Token oder bei leerem Wert ist die API öffentlich. Bei gesetztem Token verlangen API-Aufrufe den Header `Authorization: Bearer <Token>`. Der Dienst protokolliert den Token nicht. Die Health Endpunkte bleiben ohne Authentifizierung erreichbar. Swagger UI und OpenAPI Dokument behandelt der folgende Unterabschnitt.
+
+### OpenAPI und Swagger UI
+
+Das Backend kann ein OpenAPI Dokument unter `/q/openapi` und eine Swagger UI unter `/q/swagger-ui` bereitstellen. Das Dokument führt jeden konfigurierten Endpunkt als eigene GET Operation auf, Kaskaden mit den Queryparametern `level1` und `level2`.
+
+Die Variable `APP_OPENAPI_ENABLED` steht standardmäßig auf `false`. Im Quarkus Entwicklungsmodus und im Profil `local` ist sie eingeschaltet. Im ausgelieferten Image sind `/q/swagger-ui` und `/q/openapi` nur erreichbar, wenn Sie `APP_OPENAPI_ENABLED=true` in `backend.env` beziehungsweise bei Compose in `.env` setzen. Ohne diese Einstellung antworten beide Pfade mit HTTP 404, bei gesetztem Token mit HTTP 401.
+
+Bei eingeschalteter Variable sind beide Pfade und die Dateien der Swagger UI öffentlich, auch wenn `APP_AUTH_BEARER_TOKEN` gesetzt ist, damit sich die Oberfläche im Browser öffnet. Für Aufrufe mit Try it out tragen Sie den Token unter Authorize ein; die Swagger UI sendet ihn dann als Header `Authorization: Bearer <Token>`. Alle übrigen Verwaltungspfade außer `/q/health` bleiben hinter dem Token.
+
+Swagger UI und OpenAPI Dokument sind für Entwicklung und Test gedacht. Lassen Sie `APP_OPENAPI_ENABLED` beim eigenen Produktivbetrieb ungesetzt, sofern Sie nicht ausdrücklich eine öffentliche Swagger UI wünschen.
 
 ## 9. Betrieb prüfen
 
@@ -448,6 +458,19 @@ Für den Dynamic Cascade Block:
 | `level3_source` | `/api/v1/netz-produkt-tarif?level1={1}&level2={2}` |
 
 Bei zwei Ebenen entfällt `level3_source`. Die Standardfelder passen zur Antwort, daher bleiben `items_path` und die `*_field` Argumente leer. Testen Sie im Journey die Auswahl jeder Ebene. Werte in Queryparametern müssen URL kodiert sein.
+
+### Öffentliche Testumgebung für eigene Tests
+
+Für Ihre eigenen Tests stellt DigitalFreedom eine öffentliche Testumgebung bereit. Diese Testumgebung ist der Endpunkt, den Sie für Ihre Tests verwenden.
+
+| Angabe | Wert |
+|---|---|
+| Host | `epilot-test.app.digitalfreedom.co.za` |
+| Basis URL | `https://epilot-test.app.digitalfreedom.co.za` |
+| Beispiel Swagger UI | [https://epilot-test.app.digitalfreedom.co.za/q/swagger-ui](https://epilot-test.app.digitalfreedom.co.za/q/swagger-ui) |
+| Beispiel OpenAPI Dokument | [https://epilot-test.app.digitalfreedom.co.za/q/openapi](https://epilot-test.app.digitalfreedom.co.za/q/openapi) |
+
+Öffnen Sie die Beispiel Swagger UI als Referenz, um die API zu verstehen. Sie zeigt die Beispielendpunkte, also Dropdowns und Kaskaden, die Kaskaden mit `level1` und `level2`, und wie Sie diese aufrufen.
 
 ## 11. Version gezielt aktualisieren
 
