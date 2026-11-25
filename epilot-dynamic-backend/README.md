@@ -8,6 +8,7 @@ Diese Liste wird bei jeder Veröffentlichung automatisch erzeugt.
 
 | Version | Exakte Tags |
 | --- | --- |
+| 0.2.0 | `0.2.0-postgresql` |
 | 0.1.0 | `0.1.0-oracle`, `0.1.0-oracle-native`, `0.1.0-postgresql`, `0.1.0-postgresql-native` |
 | 0.0.1 | `0.0.1-oracle`, `0.0.1-postgresql` |
 
@@ -18,8 +19,9 @@ Verwenden Sie im Produktivbetrieb immer einen exakten Tag.
 | --- | --- |
 | `latest-oracle` | `0.1.0-oracle` |
 | `latest-oracle-native` | `0.1.0-oracle-native` |
-| `latest-postgresql` | `0.1.0-postgresql` |
+| `latest-postgresql` | `0.2.0-postgresql` |
 | `latest-postgresql-native` | `0.1.0-postgresql-native` |
+| `0.2-postgresql` | `0.2.0-postgresql` |
 | `0.1-oracle` | `0.1.0-oracle` |
 | `0.1-oracle-native` | `0.1.0-oracle-native` |
 | `0.1-postgresql` | `0.1.0-postgresql` |
@@ -346,7 +348,7 @@ Aktive Einträge werden nach `sort_order`, dann `label` und `id` sortiert. Pro A
 
 Die JSON Dateien sind im JVM und Native Image enthalten. Beim Start erfolgt kein Abruf von epilot-berater.de. Nach Liquibase und der Synchronisation der Endpunkte werden nur leere Endpunkte befüllt. Sobald für einen `endpoint_path` irgendeine Zeile existiert, bleiben alle vorhandenen Kundendaten und E2E-TEST Daten unverändert, auch inaktive Zeilen. Ein Neustart erzeugt keine Duplikate. Nicht konfigurierte Datenpakete werden mit einer Protokollmeldung übersprungen. Ohne einen passenden konfigurierten Endpunkt schlägt der Start fehl. Sind alle passenden Endpunkte bereits befüllt, startet die Anwendung ohne Einfügungen. Die Eltern werden vor ihren Kindern über `parent_id` eingefügt; der gesamte Ladevorgang erfolgt in einer Transaktion.
 
-Kopieren Sie `config/endpoints.demo.yaml` aus dem Quellrepository als `endpoints.demo.yaml` in Ihr Betriebsverzeichnis. Die Datei enthält die Dropdowns `netzgebiete`, `tarife`, `ladeeinrichtungen`, `zaehlerarten`, `einspeisung` sowie `anliegen` mit drei Ebenen. Ohne Zugriff auf das Quellrepository erstellen Sie `endpoints.demo.yaml` mit folgendem Inhalt:
+Kopieren Sie `config/endpoints.demo.yaml` aus dem Quellrepository als `endpoints.demo.yaml` in Ihr Betriebsverzeichnis. Die Datei enthält die Dropdowns `netzgebiete`, `tarife`, `ladeeinrichtungen`, `zaehlerarten`, `einspeisung`, `gebaeudearten`, `anschlussleistungen`, `zahlungsarten` sowie die Kaskaden `anliegen`, `steuerbare-geraete`, `erzeugungsanlagen` und `fachbetriebe` mit jeweils drei Ebenen. Leistungsangaben sind beispielhafte Planungswerte; alle Fachbetriebe sind ausdrücklich fiktiv. Ohne Zugriff auf das Quellrepository erstellen Sie `endpoints.demo.yaml` mit folgendem Inhalt:
 
 ```yaml
 app:
@@ -362,6 +364,21 @@ app:
     - path: einspeisung
       type: dropdown
     - path: anliegen
+      type: cascade
+      levels: 3
+    - path: gebaeudearten
+      type: dropdown
+    - path: anschlussleistungen
+      type: dropdown
+    - path: zahlungsarten
+      type: dropdown
+    - path: steuerbare-geraete
+      type: cascade
+      levels: 3
+    - path: erzeugungsanlagen
+      type: cascade
+      levels: 3
+    - path: fachbetriebe
       type: cascade
       levels: 3
 ```
@@ -383,7 +400,7 @@ Ausnahme in den Quelldaten: Zwei Netzgebiete haben denselben Code `10001568`. Da
 
 ## 8. Optionalen Zugriffsschutz aktivieren
 
-Ergänzen Sie in `backend.env` beziehungsweise bei Compose in `.env` die Variable `APP_AUTH_BEARER_TOKEN` mit einem geheimen Token und erstellen Sie den Container mit derselben Startanweisung neu. Ohne Token oder bei leerem Wert ist die API öffentlich. Bei gesetztem Token verlangen API-Aufrufe den Header `Authorization: Bearer <Token>`. Der Dienst protokolliert den Token nicht. Die Health Endpunkte bleiben ohne Authentifizierung erreichbar.
+Ergänzen Sie in `backend.env` beziehungsweise bei Compose in `.env` die Variable `APP_AUTH_BEARER_TOKEN` mit einem geheimen Token und erstellen Sie den Container mit derselben Startanweisung neu. Ohne Token oder bei leerem Wert ist die API öffentlich. Bei gesetztem Token verlangen API-Aufrufe den Header `Authorization: Bearer <Token>`. Der Dienst protokolliert den Token nicht. Die Health Endpunkte bleiben ohne Authentifizierung erreichbar. Swagger UI (`/q/swagger-ui`) und das OpenAPI Dokument (`/q/openapi`) sind nur für Entwicklung und Test gedacht und nur mit `APP_OPENAPI_ENABLED=true` erreichbar, dann ohne Token. Setzen Sie diese Variable im Produktivbetrieb nicht.
 
 ## 9. Betrieb prüfen
 
